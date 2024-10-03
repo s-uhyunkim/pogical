@@ -21,12 +21,8 @@ tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
 negation = one_of("¬ ~ !")
-conjunction = one_of("∧ & ·")
-non_conjunction = one_of("↑ | ⊼")
-inclusive_disjunction = one_of("∨ ∥ +")
-inclusive_non_disjunction = one_of("↓ ⊽")
-exclusive_disjunction = one_of("⊕ ⊻ ↮")
-exclusive_non_disjunction = one_of("⊙")
+conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in parse action
+disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in parse action
 implication = one_of("→ ⇒ ⊃")
 biconditional = one_of("↔ ⇔")
 
@@ -36,8 +32,8 @@ right_delimiter = one_of(") ] }").suppress()
 expression = infix_notation(variable | tautology | contradiction,
     [
         (negation, 1, opAssoc.RIGHT),
-        (conjunction, 2, opAssoc.LEFT), # TODO: include the non-conjunctive
-        (inclusive_disjunction, 2, opAssoc.LEFT), # TODO: include all disjunctives
+        (conjunctions, 2, opAssoc.LEFT),
+        (disjunctions, 2, opAssoc.LEFT),
         (implication, 2, opAssoc.LEFT),
         (biconditional, 2, opAssoc.LEFT),
     ],
