@@ -10,22 +10,24 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 # Grammar
-ParserElement.enablePackrat()
+ParserElement.enablePackrat() # Simplifies delimiter parsing and speeds it up as well
 
-bmp_alphas = ppu.BasicMultilingualPlane.alphas
+bmp_alphas = ppu.BasicMultilingualPlane.alphas # .printables overrides delimiter, tautology, and contradiction  parsing
 variable = Word(bmp_alphas)
 
-tautology = one_of("⊤ T")
-contradiction = one_of("⊥ F")
+# ≡ and ⟚ is reserved for equivalence, not biconditional
+# ≢ is reserved for non-equivalece, not exclusive disjunction
+tautology = one_of("⊤ T 1")
+contradiction = one_of("⊥ F 0")
 
-negation = one_of("¬ ~")
-conjunction = one_of("∧ &")
+negation = one_of("¬ ~ !")
+conjunction = one_of("∧ & ·")
 non_conjunction = one_of("↑ | ⊼")
-inclusive_disjunction = one_of("∨ ∥")
+inclusive_disjunction = one_of("∨ ∥ +")
 inclusive_non_disjunction = one_of("↓ ⊽")
 exclusive_disjunction = one_of("⊕ ⊻ ↮")
 exclusive_non_disjunction = one_of("⊙")
-implication = one_of("→ ⇒")
+implication = one_of("→ ⇒ ⊃")
 biconditional = one_of("↔ ⇔")
 
 left_delimiter = one_of("( [ {").suppress()
@@ -51,6 +53,7 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/")
+# Recommended to use Annotated according to the current FastAPI docs
 async def parse(request: Request, logic_statement_input: Annotated[str, Form()]):
     tokens = expression.parseString(logic_statement_input)
     return templates.TemplateResponse("index.html", {"request": request, "tokens": tokens})
