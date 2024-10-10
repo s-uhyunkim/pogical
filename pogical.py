@@ -1,7 +1,9 @@
 #!/bin/python3
-from pprint import pprint
 
-from orca.braille import tokens
+# Need this to resolve unspecified gtk version warning
+import gi
+gi.require_version('Gtk', '3.0')
+
 from pyparsing import ParserElement, infix_notation, opAssoc, Suppress, one_of, Word, pyparsing_unicode as ppu
 
 from typing import Annotated
