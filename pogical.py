@@ -86,5 +86,4 @@ async def index(request: Request):
 # Recommended to use Annotated according to the current FastAPI docs
 async def parse(request: Request, logic_statement_input: Annotated[str, Form()]):
     tokens = expression.parseString(logic_statement_input)
-    pprint(tokens)
     return templates.TemplateResponse("index.html", {"request": request, "tokens": tokens})
