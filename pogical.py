@@ -19,8 +19,8 @@ templates = Jinja2Templates(directory="templates")
 ParserElement.enablePackrat() # Simplifies delimiter parsing and speeds it up as well
 
 # .printables would override delimiter parsing
-bmp_alphas = ppu.BasicMultilingualPlane.alphas # Document allowed characters; still overrides 'T' and 'F'
-variable = Word(bmp_alphas)
+bmp_alphas = ppu.BasicMultilingualPlane.alphas
+variable = Word(bmp_alphas, excludeChars='T F')
 
 # ≡ and ⟚ is reserved for equivalence, not biconditional
 # ≢ is reserved for non-equivalece, not exclusive disjunction
