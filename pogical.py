@@ -49,10 +49,18 @@ def contradiction_node():
 def negation_node():
     return Node("not")
 
-def conjunction_node():
+def conjunction_node(tokens):
+    if tokens[0] == one_of("↑ | ⊼"): # I'm not sure if tokens[0] is the best workaround.
+        return Node("nand")
     return Node("and")
 
-def disjunction_node():
+def disjunction_node(tokens):
+    if tokens[0] == one_of("⊕ ⊻ ↮"):
+        return Node("xor")
+    if tokens[0] == one_of("↓ ⊽"):
+        return Node("nor")
+    elif tokens[0] == "⊙":
+        return Node("xnor")
     return Node("or")
 
 def implication_node():
@@ -74,7 +82,7 @@ expression = infix_notation(variable.set_parse_action(variable_node) |
     Suppress(left_delimiter), Suppress(right_delimiter)
 )
 
-# test: ~p & q ∨ r ⊕ s → t ↔ u & ⊤ & ⊥
+# test: ~p & q ∨ r ⊕ s ↓ a ⊙ b → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥
 
 
 
