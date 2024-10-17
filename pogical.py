@@ -28,8 +28,8 @@ tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
 negation = one_of("¬ ~ !")
-conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in parse action
-disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in parse action
+conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in conjunction_node(tokens)
+disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in disjunction_node(tokens)
 implication = one_of("→ ⇒ ⊃")
 biconditional = one_of("↔ ⇔")
 
