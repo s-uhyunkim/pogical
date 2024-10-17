@@ -1,6 +1,6 @@
 #!/bin/python3
 
-# Need this to resolve unspecified gtk version warning
+# Need these 2 lines to resolve unspecified gtk version warning
 import gi
 gi.require_version('Gtk', '3.0')
 
@@ -16,14 +16,14 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 # Grammar; see pyparsing tutorials/docs
-ParserElement.enablePackrat() # Simplifies delimiter parsing and speeds it up as well
+ParserElement.enablePackrat() # Simplifies delimiter parsing and speeds up parsing in general
 
-# .printables would override delimiter parsing
-bmp_alphas = ppu.BasicMultilingualPlane.alphas
-variable = Word(bmp_alphas, excludeChars='T F')
+bmp_printables = ppu.BasicMultilingualPlane.printables # Mention bmp_printables in docs
+variable = Word(bmp_printables, excludeChars='⊤ ⊥ T F 1 0 ( ) [ ] { }')
+# Must exclude above chars for tautologies, contradictions and delimiters
 
-# ≡ and ⟚ is reserved for equivalence, not biconditional
-# ≢ is reserved for non-equivalece, not exclusive disjunction
+# ≡ and ⟚ are reserved for equivalence, not biconditional
+# ≢ is reserved for non-equivalence, not exclusive disjunction
 tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
@@ -69,6 +69,7 @@ def implication_node():
 def biconditional_node():
     return Node("iff")
 
+# expression definition
 expression = infix_notation(variable.set_parse_action(variable_node) |
                             tautology.set_parse_action(tautology_node) |
                             contradiction.set_parse_action(contradiction_node),
@@ -82,7 +83,7 @@ expression = infix_notation(variable.set_parse_action(variable_node) |
     Suppress(left_delimiter), Suppress(right_delimiter)
 )
 
-# test: ~p & q ∨ r ⊕ s ↓ a ⊙ b → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥
+# test cases: ~p & q ∨ r ⊕ s ↓ a ⊙ b → t ↔ u & ⊤ ↑ (⊥ | {⊥ ⊼ [⊥]})
 
 
 
