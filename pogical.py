@@ -41,33 +41,33 @@ def variable_node(tokens):
     return [Node(token) for token in tokens]
 
 def tautology_node():
-    return Node("true")
+    return Node("tautology")
 
 def contradiction_node():
-    return Node("false")
+    return Node("contradiction")
 
 def negation_node():
-    return Node("not")
+    return Node("negation")
 
 def conjunction_node(tokens):
     if tokens[0] == one_of("↑ | ⊼"): # I'm not sure if tokens[0] is the best workaround.
-        return Node("nand")
-    return Node("and")
+        return Node("non-conjunctive")
+    return Node("conjunctive")
 
 def disjunction_node(tokens):
     if tokens[0] == one_of("⊕ ⊻ ↮"):
-        return Node("xor")
+        return Node("exlusive disjuncion")
     if tokens[0] == one_of("↓ ⊽"):
-        return Node("nor")
+        return Node("inclusive non-disjuncion")
     elif tokens[0] == "⊙":
-        return Node("xnor")
-    return Node("or")
+        return Node("exclusive non-disjuncion")
+    return Node("inclusive disjuncion")
 
 def implication_node():
-    return Node("implies")
+    return Node("implication")
 
 def biconditional_node():
-    return Node("iff")
+    return Node("biconditional")
 
 # expression definition
 expression = infix_notation(variable.set_parse_action(variable_node) |
