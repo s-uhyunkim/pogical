@@ -2,15 +2,16 @@
 
 # Need these 2 lines to resolve unspecified gtk version warning
 import gi
+
 gi.require_version('Gtk', '3.0')
 
 from pyparsing import ParserElement, infix_notation, opAssoc, Suppress, one_of, Word, pyparsing_unicode as ppu
+from sympy import *
+from sympy.logic.boolalg import Xnor
 
 from typing import Annotated
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
-
-from Node import Node
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -28,8 +29,8 @@ tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
 negation = one_of("¬ ~ !")
-conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in conjunction_node(tokens)
-disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in disjunction_node(tokens)
+conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens)
+disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in make_disjunction_node(tokens)
 implication = one_of("→ ⇒ ⊃")
 biconditional = one_of("↔ ⇔")
 
@@ -37,53 +38,70 @@ left_delimiter = one_of("( [ {").suppress()
 right_delimiter = one_of(") ] }").suppress()
 
 # Parse actions
-def variable_node(tokens):
-    return [Node(token) for token in tokens]
+# evaluate=False prevents Sympy from auto-simplifying expressions during parsing
+def make_variable_node(tokens):
+    return Symbol(tokens[0])
 
-def tautology_node():
-    return Node("tautology")
+def make_tautology_node(tokens):
+    return true
 
-def contradiction_node():
-    return Node("contradiction")
+def make_contradiction_node(tokens):
+    return false
 
-def negation_node():
-    return Node("negation")
+def make_negation_node(tokens):
+    term = tokens[0][1]
+    return Not(term, evaluate=False)
 
-def conjunction_node(tokens):
-    if tokens[0] == one_of("↑ | ⊼"): # I'm not sure if tokens[0] is the best workaround.
-        return Node("non-conjunctive")
-    return Node("conjunctive")
+def make_conjunction_node(tokens):
+    left_term, right_term = tokens[0][0], tokens[0][2]
+    operator = tokens[0][1] # 'operator' is a string
 
-def disjunction_node(tokens):
-    if tokens[0] == one_of("⊕ ⊻ ↮"):
-        return Node("exlusive disjuncion")
-    if tokens[0] == one_of("↓ ⊽"):
-        return Node("inclusive non-disjuncion")
-    elif tokens[0] == "⊙":
-        return Node("exclusive non-disjuncion")
-    return Node("inclusive disjuncion")
+    if operator == one_of("↑ | ⊼"): # Comparing two strings
+        return Nand(left_term, right_term, evaluate=False)
+    return And(left_term, right_term, evaluate=False)
 
-def implication_node():
-    return Node("implication")
+def make_disjunction_node(tokens):
+    left_term, right_term = tokens[0][0], tokens[0][2]
+    operator = tokens[0][1]
 
-def biconditional_node():
-    return Node("biconditional")
+    if operator == one_of("⊕ ⊻ ↮"):
+        return Xor(left_term, right_term, evaluate=False)
+    elif operator == one_of("↓ ⊽"):
+        return Nor(left_term, right_term, evaluate=False)
+    elif operator == "⊙":
+        return Xnor(left_term, right_term, evaluate=False)
+    return Or(left_term, right_term, evaluate=False)
+
+def make_implication_node(tokens):
+    left_term, right_term = tokens[0][0], tokens[0][2]
+    return Implies(left_term, right_term, evaluate=False)
+
+def make_biconditional_node(tokens):
+    left_term, right_term = tokens[0][0], tokens[0][2]
+    return Equivalent(left_term, right_term, evaluate=False)
 
 # expression definition
-expression = infix_notation(variable.set_parse_action(variable_node) |
-                            tautology.set_parse_action(tautology_node) |
-                            contradiction.set_parse_action(contradiction_node),
-    [
-        (negation.set_parse_action(negation_node), 1, opAssoc.RIGHT),
-        (conjunctions.set_parse_action(conjunction_node), 2, opAssoc.LEFT),
-        (disjunctions.set_parse_action(disjunction_node), 2, opAssoc.LEFT),
-        (implication.set_parse_action(implication_node), 2, opAssoc.LEFT),
-        (biconditional.set_parse_action(biconditional_node), 2, opAssoc.LEFT),
+expression = infix_notation(variable.set_parse_action(make_variable_node) |
+                            tautology.set_parse_action(make_tautology_node) |
+                            contradiction.set_parse_action(make_contradiction_node),
+                            [ # All operators must be right-associative for recursive parsing to work!
+        (negation, 1, opAssoc.RIGHT, make_negation_node),
+        (conjunctions, 2, opAssoc.RIGHT, make_conjunction_node),
+        (disjunctions, 2, opAssoc.RIGHT, make_disjunction_node),
+        (implication, 2, opAssoc.RIGHT, make_implication_node),
+        (biconditional, 2, opAssoc.RIGHT, make_biconditional_node),
     ],
-    Suppress(left_delimiter), Suppress(right_delimiter)
-)
+                            Suppress(left_delimiter), Suppress(right_delimiter)
+                            )
 
-# test cases: ~p & q ∨ r ⊕ s ↓ a ⊙ b → t ↔ u & ⊤ ↑ (⊥ | {⊥ ⊼ [⊥]})
+# test cases:
+# ~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ (⊥ | {⊥ ⊼ [⊥]})
+# p & q ∧ r & s
+# t ↑ r | q ⊼ p
+# r → q ⇒ p ⊃ o
+# ~¬¬¬¬!!~p
+# p ↔ a ⇔ b
+# p ∨ q ∥ r + s ↓ t ⊽ u ⊕ v ⊻ w ↮ x ⊙ y
 
 
 
