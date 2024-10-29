@@ -84,15 +84,15 @@ def make_biconditional_node(tokens):
 expression = infix_notation(variable.set_parse_action(make_variable_node) |
                             tautology.set_parse_action(make_tautology_node) |
                             contradiction.set_parse_action(make_contradiction_node),
-                            [ # All operators must be right-associative for recursive parsing to work!
+    [ # All operators must be right-associative for recursive parsing to work!
         (negation, 1, opAssoc.RIGHT, make_negation_node),
         (conjunctions, 2, opAssoc.RIGHT, make_conjunction_node),
         (disjunctions, 2, opAssoc.RIGHT, make_disjunction_node),
         (implication, 2, opAssoc.RIGHT, make_implication_node),
         (biconditional, 2, opAssoc.RIGHT, make_biconditional_node),
     ],
-                            Suppress(left_delimiter), Suppress(right_delimiter)
-                            )
+    Suppress(left_delimiter), Suppress(right_delimiter)
+    )
 
 # test cases:
 # ~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ (⊥ | {⊥ ⊼ [⊥]})
