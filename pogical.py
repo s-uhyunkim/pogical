@@ -42,10 +42,10 @@ right_delimiter = one_of(") ] }").suppress()
 def make_variable_node(tokens):
     return Symbol(tokens[0])
 
-def make_tautology_node(tokens):
+def make_tautology_node():
     return true
 
-def make_contradiction_node(tokens):
+def make_contradiction_node():
     return false
 
 def make_negation_node(tokens):
