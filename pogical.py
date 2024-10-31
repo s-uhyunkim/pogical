@@ -2,7 +2,6 @@
 
 # Need these 2 lines to resolve unspecified gtk version warning
 import gi
-
 gi.require_version('Gtk', '3.0')
 
 from pyparsing import ParserElement, infix_notation, opAssoc, Suppress, one_of, Word, pyparsing_unicode as ppu
