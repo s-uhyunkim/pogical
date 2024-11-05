@@ -80,8 +80,8 @@ expression = infix_notation(variable.set_parse_action(make_variable_node) |
     )
 
 # test cases:
-# {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c → (t ↔ u) & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥
-# ~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥
+# {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c → (t ↔ u) & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify in sympy for some reason)
+# ~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify in sympy for some reason)
 # p & q ∧ r & s
 # t ↑ r | q ⊼ p
 # r → q ⇒ p ⊃ o
@@ -89,3 +89,5 @@ expression = infix_notation(variable.set_parse_action(make_variable_node) |
 # p ↔ a ⇔ b
 # p ∨ q ∥ r + s ↓ t ⊽ u ⊕ v ⊻ w ↮ x ⊙ y
 # a & c ∨ ~[~b & (T & d ∨ ~{~b & a})]. should give b | (a & c) | (a & ~d)
+# ⊤ ↑ ⊥ | ⊥ ⊼ ⊥. should give True.
+# ~p ∨ q. should give p → q
