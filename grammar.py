@@ -41,7 +41,7 @@ def make_conjunction_node(tokens):
     left_term, right_term = tokens[0][0], tokens[0][2]
     operator = tokens[0][1] # var 'operator' is a string
 
-    if operator == one_of("↑ | ⊼"): # Comparing two strings
+    if operator == one_of("↑ | ⊼"): # Comparing Literals
         return Nand(left_term, right_term, evaluate=False)
     return And(left_term, right_term, evaluate=False)
 
