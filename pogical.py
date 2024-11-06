@@ -14,11 +14,6 @@ from grammar import *
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-#poop = expression.parse_string("{~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c → (t ↔ u) & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥")[0]
-poop = expression.parse_string("p ∨ q ∥ r + s ↓ t ⊽ u ⊕ v ⊻ w ↮ x ⊙ y")[0]
-print(type(poop))
-print(simplify_logic(poop))
-
 
 
 @app.get("/")
