@@ -92,3 +92,4 @@ expression = infix_notation(variable.set_parse_action(make_variable_node) |
 # a & c ∨ ~[~b & (T & d ∨ ~{~b & a})]. should give b | (a & c) | (a & ~d)
 # ⊤ ↑ ⊥ | ⊥ ⊼ ⊥. should give True.
 # ~p ∨ q. should give p → q
+# p & p
