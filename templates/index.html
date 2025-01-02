@@ -19,7 +19,7 @@
         <p>{{ sympy_expression }}</p>
         <div id="graph"></div>
         <script>
-            const sympy_expression_dot = '{sympy_expression_dot}'
+            //const sympy_expression_dot = {{ sympy_expression_dot }};
 
             Viz.instance().then(function(viz) {
             var svg = viz.renderSVGElement("digraph { a -> b }");
