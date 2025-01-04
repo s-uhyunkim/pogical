@@ -1,9 +1,5 @@
 #!/bin/python3
 
-# Need these 2 lines to resolve unspecified gtk version warning
-import gi
-gi.require_version('Gtk', '3.0')
-
 from typing import Annotated
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
@@ -29,5 +25,5 @@ async def simplify(request: Request, logic_statement_input: Annotated[str, Form(
     simplification_dot = dotprint(simplification)
     return templates.TemplateResponse("index.html", {"request": request, "sympy_expression": sympy_expression,
                                                      "sympy_expression_dot": sympy_expression_dot,
-                                                     "simplification_dot": simplification_dot,
-                                                     "simplification": simplification })
+                                                     "simplification": simplification,
+                                                     "simplification_dot": simplification_dot})
