@@ -86,7 +86,7 @@ expression = infix_notation(variable.set_parse_action(make_variable_node) |
 # t ↑ r | q ⊼ p
 # r → q ⇒ p ⊃ o
 # ~¬¬¬¬!!~p. should give p
-# !~¬¬¬¬!!~p. should give p
+# !~¬¬¬¬!!~p. should give ~p
 # p ↔ a ⇔ b
 # p ∨ q ∥ r + s ↓ t ⊽ u ⊕ v ⊻ w ↮ x ⊙ y
 # a & c ∨ ~[~b & (T & d ∨ ~{~b & a})]. should give b | (a & c) | (a & ~d)

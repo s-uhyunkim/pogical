@@ -20,10 +20,12 @@ async def index(request: Request):
 # Recommended to use Annotated according to the current FastAPI docs
 async def simplify(request: Request, logic_statement_input: Annotated[str, Form()]):
     sympy_expression = expression.parse_string(logic_statement_input)[0] # W/o [0], the var would be ParseResult object
-    sympy_expression_dot = dotprint(sympy_expression) # converts sympy_expression into Graphviz by DOT description
+    sympy_expression_dot = dotprint(sympy_expression) # converts sympy_expression into a DOT string
     simplification = simplify_logic(sympy_expression) # function only takes in sympy 'Boolean' input
     simplification_dot = dotprint(simplification)
-    return templates.TemplateResponse("index.html", {"request": request, "sympy_expression": sympy_expression,
+    return templates.TemplateResponse("index.html", {"request": request,
+                                                     "logic_statement_input": logic_statement_input,
+                                                     "sympy_expression": sympy_expression,
                                                      "sympy_expression_dot": sympy_expression_dot,
                                                      "simplification": simplification,
                                                      "simplification_dot": simplification_dot})

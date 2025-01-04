@@ -5,7 +5,8 @@
     <head>
         <meta charset="UTF-8">
         <title>pOGICAL</title>
-        <script src="https://cdn.jsdelivr.net/npm/@viz-js/viz@3.11.0/lib/viz-standalone.min.js"></script>
+        <script src=" https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+        <script src=" https://cdn.jsdelivr.net/npm/d3-graphviz@5.6.0/build/d3-graphviz.min.js"></script>
     </head>
     
     <body>
@@ -16,18 +17,22 @@
             <input type="submit" value="Simplify" id="simply">
         </form>
         <br>
+        <p>{{ logic_statement_input }}</p>
         <p>{{ sympy_expression }}</p>
-        <div id="graph"></div>
+        <div id="graph1"></div>
         <script>
-            //const sympy_expression_dot = {{ sympy_expression_dot }};
-
-            Viz.instance().then(function(viz) {
-            var svg = viz.renderSVGElement("digraph { a -> b }");
-
-            document.getElementById("graph").appendChild(svg);
-            });
+            d3.select("#graph1").graphviz()
+                .renderDot(`{{ sympy_expression_dot | safe }}`);
+                // Must use backticks `` to avoid synatx errors during injection through Jinja2!
+                // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
+                // TODO: stop using safe!
         </script>
         <p>{{ simplification }}</p>
+        <div id="graph2"></div>
+        <script>
+            d3.select("#graph2").graphviz()
+                .renderDot(`{{ simplification_dot | safe }}`);
+        </script>
     </body>
 
 </html>
