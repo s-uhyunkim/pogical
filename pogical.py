@@ -21,13 +21,13 @@ async def simplify(request: Request, logic_statement_string: Annotated[str, Form
     try:
         sympy_expression = expression.parse_string(logic_statement_string)[0] # W/o [0], the var would be ParseResult object
     except:
-        return templates.TemplateResponse("output.html", {"hasException" : True})
+        return templates.TemplateResponse("output.html", {"hasException" : True}) # toggles other block definition in output.html
     sympy_expression_dot = dotprint(sympy_expression) # converts sympy_expression into a DOT string
-    simplification = simplify_logic(sympy_expression) # function only takes in sympy 'Boolean' input
-    simplification_dot = dotprint(simplification)
+    sympyfication = simplify_logic(sympy_expression) # function only takes in sympy 'Boolean' input
+    sympyfication_dot = dotprint(sympyfication)
     return templates.TemplateResponse("output.html", {"request": request,
                                                      "logic_statement_string": logic_statement_string,
                                                      "sympy_expression": sympy_expression,
                                                      "sympy_expression_dot": sympy_expression_dot,
-                                                     "simplification": simplification,
-                                                     "simplification_dot": simplification_dot})
+                                                     "sympyfication": sympyfication,
+                                                     "sympyfication_dot": sympyfication_dot})
