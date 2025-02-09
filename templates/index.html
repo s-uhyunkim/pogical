@@ -18,9 +18,9 @@
         <br>
         <pre>{{ logic_statement_string }}</pre>
         <pre>{{ sympy_expression }}</pre>
-        <div id="graph1"></div>
+        <div id="input_graph"></div>
         <script>
-            d3.select("#graph1")
+            d3.select("#input_graph")
               .graphviz()
               .renderDot(`{{ sympy_expression_dot | safe }}`);
                 // Must use backticks `` to avoid synatx errors during injection through Jinja2!
@@ -28,9 +28,9 @@
                 // TODO: switch to reading the graphviz file!
         </script>
         <pre>{{ simplification }}</pre>
-        <div id="graph2"></div>
+        <div id="output_graph"></div>
         <script>
-            d3.select("#graph2")
+            d3.select("#output_graph")
               .graphviz()
               .renderDot(`{{ simplification_dot | safe }}`);
         </script>
