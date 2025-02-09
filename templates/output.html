@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+
+{% block output %}
+    {% if hasException %}
+        <p>PyParsing could not parse input string into a SymPy expression.</p>
+    {% else %}
+        <pre>{{ logic_statement_string }}</pre>
+        <pre>{{ sympy_expression }}</pre>
+        <div id="input_graph"></div>
+        <script>
+            d3.select("#input_graph")
+              .graphviz()
+              .renderDot(`{{ sympy_expression_dot | safe }}`);
+                // Must use backticks `` to avoid synatx errors during injection through Jinja2!
+                // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
+                // TODO: switch to reading the graphviz file!
+        </script>
+        <pre>{{ simplification }}</pre>
+        <div id="output_graph"></div>
+        <script>
+            d3.select("#output_graph")
+              .graphviz()
+              .renderDot(`{{ simplification_dot | safe }}`);
+        </script>
+    {% endif %}
+{% endblock %}
