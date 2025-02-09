@@ -12,27 +12,27 @@
     
     <body>
         <form method="post">
-            <p>Enter logical statement(s):</p>
-            <input type="text" name="logic_statement_input">
-            <br>
+            <input type="text" name="logic_statement_string" placeholder="Enter logical expressions" required>
             <input type="submit" value="Simplify" id="simply">
         </form>
         <br>
-        <p>{{ logic_statement_input }}</p>
-        <p>{{ sympy_expression }}</p>
+        <pre>{{ logic_statement_string }}</pre>
+        <pre>{{ sympy_expression }}</pre>
         <div id="graph1"></div>
         <script>
-            d3.select("#graph1").graphviz()
-                .renderDot(`{{ sympy_expression_dot | safe }}`);
+            d3.select("#graph1")
+              .graphviz()
+              .renderDot(`{{ sympy_expression_dot | safe }}`);
                 // Must use backticks `` to avoid synatx errors during injection through Jinja2!
                 // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
-                // TODO: stop using safe!
+                // TODO: switch to reading the graphviz file!
         </script>
-        <p>{{ simplification }}</p>
+        <pre>{{ simplification }}</pre>
         <div id="graph2"></div>
         <script>
-            d3.select("#graph2").graphviz()
-                .renderDot(`{{ simplification_dot | safe }}`);
+            d3.select("#graph2")
+              .graphviz()
+              .renderDot(`{{ simplification_dot | safe }}`);
         </script>
     </body>
 
