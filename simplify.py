@@ -18,13 +18,13 @@ def idempotent(p, q):
     # p & p = p
 def double_negation(p):
     # ~~p = p
-def communicative(p, q, r):
+def communication(p, q, r):
     # p || q = q || p
     # p & q = q & p
-def associative(p, q, r):
+def association(p, q, r):
     # (p || q) || r = p || (q || r)
     # (p & q) & r = p & (q & r)
-def distributive(p, q, r):
+def distribution(p, q, r):
     # (p || q) & (p || r) = p || (q & r)
     # (p & q) || (p & r) = p & (q || r)
 def de_morgans(p, q):
@@ -42,12 +42,14 @@ def negation(p):
 
 # Implication Laws
 
-def cond_equiv(p, q):
+def cond_exchange(p, q):
     # ~p || q = p -> q
     # ~(p -> q) = p & ~q
-def contrapositive(p, q):
+def contraposition(p, q):
     # ~q -> ~p = p -> q
-def reverse_cond_equiv(p, q):
+def exportation(p, q, r):
+    # (p & q) -> r = p -> (q -> r)
+def reverse_cond_exchange(p, q):
     # ~p -> q = p || q
     # ~(p -> ~q) = p & q
 def cond_distribution(p, q, r):
@@ -60,6 +62,6 @@ def cond_distribution(p, q, r):
 
 def decomposition(p, q):
 def bi_inverse(p, q):
-def bi_equiv(p, q):
+def bi_exchange(p, q):
 def single_negation(p, q):
 def xor_definition(p, q):
