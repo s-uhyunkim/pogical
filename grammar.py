@@ -80,8 +80,9 @@ expression = infix_notation(variable.set_parse_action(make_variable_node) |
     )
 
 # test cases:
-# {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c → (t ↔ u) & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify in sympy for some reason)
-# ~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify in sympy for some reason)
+# {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c → (t ↔ u) & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify when force=False)
+# ~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify when force=False)
+# {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c (simplify_logic is so hellbent on POS or SOP form that the output is horribly long)
 # p & q ∧ r & s
 # t ↑ r | q ⊼ p
 # r → q ⇒ p ⊃ o

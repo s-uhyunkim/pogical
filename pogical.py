@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 # Logic parsing grammar; see pyparsing tutorials or docs
 from grammar import *
 # Manual simplification; see sympy docs
-from simplify import *
+# from simplify import *
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -26,10 +26,10 @@ async def simplify(request: Request, logic_statement_string: Annotated[str, Form
         return templates.TemplateResponse("output.html", {"hasException" : True}) # toggles other block definition in output.html
     sympy_expression_dot = dotprint(sympy_expression) # converts sympy_expression into a DOT string
 
-    manual_simplification = manual_simplify(sympy_expression)
-    manual_simplification_dot = dotprint(manual_simplification)
+    # manual_simplification = manual_simplify(sympy_expression)
+    # manual_simplification_dot = dotprint(manual_simplification)
 
-    sympyfication = simplify_logic(sympy_expression) # function only takes in sympy 'Boolean' input
+    sympyfication = simplify_logic(sympy_expression, deep=False, force=True) # function only takes in sympy 'Boolean' input
     sympyfication_dot = dotprint(sympyfication)
     return templates.TemplateResponse("output.html", {"request": request,
                                                      "logic_statement_string": logic_statement_string,
