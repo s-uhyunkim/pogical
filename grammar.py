@@ -78,19 +78,3 @@ expression = infix_notation(variable.set_parse_action(make_variable_node) |
     ],
     Suppress(left_delimiter), Suppress(right_delimiter)
     )
-
-# test cases:
-# {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c → (t ↔ u) & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify when force=False)
-# ~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (doesn't simplify when force=False)
-# {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c (simplify_logic is so hellbent on POS or SOP form that the output is horribly long)
-# p & q ∧ r & s
-# t ↑ r | q ⊼ p
-# r → q ⇒ p ⊃ o
-# ~¬¬¬¬!!~p. should give p
-# !~¬¬¬¬!!~p. should give ~p
-# p ↔ a ⇔ b
-# p ∨ q ∥ r + s ↓ t ⊽ u ⊕ v ⊻ w ↮ x ⊙ y
-# a & c ∨ ~[~b & (T & d ∨ ~{~b & a})]. should give b | (a & c) | (a & ~d)
-# ⊤ ↑ ⊥ | ⊥ ⊼ ⊥. should give True.
-# ~p ∨ q. should give p → q
-# p & p

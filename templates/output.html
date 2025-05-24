@@ -8,7 +8,7 @@
             <summary>Input</summary>
 
             <h3>Input String</h3>
-            <pre>{{ logic_statement_string }}</pre>
+            <pre>{{ input_string }}</pre>
             <h3>SymPy Expression</h3>
             <code>{{ sympy_expression }}</code>
         </details>
@@ -17,21 +17,21 @@
         <script>
             d3.select("#input_graph")
               .graphviz()
-              .renderDot(`{{ sympy_expression_dot | safe }}`);
+              .renderDot(`{{ boolean_expression_dot | safe }}`);
                 // Must use backticks `` to avoid synatx errors during injection through Jinja2!
                 // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
                 // TODO: switch to reading the graphviz file!
         </script>
 
         <details>
-            <summary>SymPy-fication</summary>
+            <summary>Simplification</summary>
 
-            <code>{{ sympyfication }}</code>
+            <code>{{ simplified }}</code>
             <div id="output_graph"></div>
             <script>
                 d3.select("#output_graph")
                   .graphviz()
-                  .renderDot(`{{ sympyfication_dot | safe }}`);
+                  .renderDot(`{{ simplified_dot | safe }}`);
             </script>
         </details>
     {% endif %}
