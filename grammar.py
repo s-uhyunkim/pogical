@@ -4,7 +4,7 @@ from sympy.logic.boolalg import Xnor
 
 ParserElement.enablePackrat() # Simplifies delimiter parsing and speeds up parsing in general
 
-bmp_printables = ppu.BasicMultilingualPlane.printables # Mention bmp_printables in docs
+bmp_printables = ppu.BasicMultilingualPlane.printables # Mention bmp_printables in docs TODO: separate variables like AB
 variable = Word(bmp_printables, excludeChars='⊤ ⊥ T F 1 0 ( ) [ ] { }')
 # Must exclude above chars for tautologies, contradictions, and delimiters lest they get treated as variables!
 
@@ -13,8 +13,8 @@ variable = Word(bmp_printables, excludeChars='⊤ ⊥ T F 1 0 ( ) [ ] { }')
 tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
-negation = one_of("¬ ~ !")
-conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens)
+negation = one_of("¬ ~ !") # TODO: support ′ and '
+conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens) TODO: support implicit notation AB
 disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support || syntax
 implication = one_of("→ ⇒ ⊃")
 biconditional = one_of("↔ ⇔")
