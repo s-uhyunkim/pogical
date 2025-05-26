@@ -5,7 +5,7 @@ from sympy.logic.boolalg import Xnor
 ParserElement.enablePackrat() # Simplifies delimiter parsing and speeds up parsing in general
 
 bmp_printables = ppu.BasicMultilingualPlane.printables # Mention bmp_printables in docs
-variable = Word(bmp_printables, excludeChars='⊤ ⊥ T F 1 0 ( ) [ ] { }')
+variable = Word(bmp_printables, excludeChars="⊤ ⊥ T F 1 0 ( ) [ ] { }")
 # Must exclude above chars for tautologies, contradictions, and delimiters lest they get treated as variables!
 
 # ≡ and ⟚ are reserved for equivalence, not biconditional TODO: parse!
@@ -13,7 +13,7 @@ variable = Word(bmp_printables, excludeChars='⊤ ⊥ T F 1 0 ( ) [ ] { }')
 tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
-negation = one_of("¬ ̅ ~ ! - − ′ '")
+negation = one_of("¬ ~ ! - −")
 conjunctions = one_of("∧ & · × ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens) TODO: support &&
 disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support ||
 implication = one_of("→ ⇒ ⊃ ↛ ⇏ ⊅ ← ⇐ ⊂ ↚ ⇍ ⊄")
@@ -34,10 +34,7 @@ def make_contradiction_node():
     return false
 
 def make_negation_node(tokens):
-    if tokens[0][1] == one_of("′ '"): # when tokens[0][1] is the negation operator
-        term = tokens[0][0]
-    else:
-        term = tokens[0][1]
+    term = tokens[0][1]
     return Not(term, evaluate=False)
 
 def make_conjunction_node(tokens):
@@ -45,7 +42,7 @@ def make_conjunction_node(tokens):
     operator = tokens[0][1] # var 'operator' is a string
 
     if operator == one_of("↑ | ⊼"): # Comparing Literals because NAND is in the same order as AND.
-                                    # infix_notation() orders operations by the order of a tuple array, hence this if-statement
+                                    # infix_notation() gives precedence levels by the order of a tuple array, hence this if-statement
         return Nand(left_term, right_term, evaluate=False)
     return And(left_term, right_term, evaluate=False)
 
