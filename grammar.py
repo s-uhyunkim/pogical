@@ -14,8 +14,8 @@ tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
 negation = one_of("¬ ~ ! - −")
-conjunctions = one_of("∧ & · × ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens) TODO: support &&
-disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support ||
+conjunctions = one_of("∧ & · × ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens)
+disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ⊙") # Will be sorted in make_disjunction_node(tokens)
 implication = one_of("→ ⇒ ⊃ ↛ ⇏ ⊅ ← ⇐ ⊂ ↚ ⇍ ⊄")
 biconditional = one_of("↔ ⇔ ↮ ⇎")
 
