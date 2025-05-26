@@ -13,8 +13,8 @@ variable = Word(bmp_printables, excludeChars='⊤ ⊥ T F 1 0 ( ) [ ] { }')
 tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
-negation = one_of("¬ ~ !") # TODO: support ′ and '
-conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens) TODO: support implicit notation AB
+negation = one_of("¬ ~ ! - − ′ '")
+conjunctions = one_of("∧ & · × ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens) TODO: support implicit notation AB and &&
 disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support || syntax
 implication = one_of("→ ⇒ ⊃ ← ⇐ ⊂")
 biconditional = one_of("↔ ⇔")
@@ -34,7 +34,10 @@ def make_contradiction_node():
     return false
 
 def make_negation_node(tokens):
-    term = tokens[0][1]
+    if tokens[0][1] == one_of("′ '"): # when tokens[0][1] is the negation operator
+        term = tokens[0][0]
+    else:
+        term = tokens[0][1]
     return Not(term, evaluate=False)
 
 def make_conjunction_node(tokens):
