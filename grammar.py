@@ -8,14 +8,14 @@ bmp_printables = ppu.BasicMultilingualPlane.printables # Mention bmp_printables 
 variable = Word(bmp_printables, excludeChars='⊤ ⊥ T F 1 0 ( ) [ ] { }')
 # Must exclude above chars for tautologies, contradictions, and delimiters lest they get treated as variables!
 
-# ≡ and ⟚ are reserved for equivalence, not biconditional
-# ≢ is reserved for non-equivalence, not exclusive disjunction
+# ≡ and ⟚ are reserved for equivalence, not biconditional TODO: parse!
+# ≢ is reserved for non-equivalence, not exclusive disjunction TODO: parse!
 tautology = one_of("⊤ T 1")
 contradiction = one_of("⊥ F 0")
 
 negation = one_of("¬ ~ !")
 conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens)
-disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in make_disjunction_node(tokens)
+disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support || syntax
 implication = one_of("→ ⇒ ⊃")
 biconditional = one_of("↔ ⇔")
 

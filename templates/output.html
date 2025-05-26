@@ -9,30 +9,82 @@
 
             <h3>Input String</h3>
             <pre>{{ input_string }}</pre>
-            <h3>SymPy Expression</h3>
-            <code>{{ sympy_expression }}</code>
+            <h3>Syntax Tree</h3>
+            <code>{{ boolean_expression }}</code>
+            <div id="input_graph"></div>
+            <script>
+                d3.select("#input_graph")
+                  .graphviz()
+                  .renderDot(`{{ boolean_expression_dot | safe }}`);
+                    // Must use backticks `` to avoid synatx errors during injection through Jinja2!
+                    // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
+                    // TODO: switch to reading the graphviz file!
+            </script>
         </details>
 
-        <div id="input_graph"></div>
-        <script>
-            d3.select("#input_graph")
-              .graphviz()
-              .renderDot(`{{ boolean_expression_dot | safe }}`);
-                // Must use backticks `` to avoid synatx errors during injection through Jinja2!
-                // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
-                // TODO: switch to reading the graphviz file!
-        </script>
-
-        <details>
+        <details open>
             <summary>Simplification</summary>
 
-            <code>{{ simplified }}</code>
-            <div id="output_graph"></div>
-            <script>
-                d3.select("#output_graph")
-                  .graphviz()
-                  .renderDot(`{{ simplified_dot | safe }}`);
-            </script>
+            <details open>
+                <summary>Classical Form</summary>
+
+                <code>{{ simplified }}</code>
+                <div id="output_graph"></div>
+                <script>
+                    d3.select("#output_graph")
+                      .graphviz()
+                      .renderDot(`{{ simplified_dot | safe }}`);
+                </script>
+            </details>
+
+            <details>
+                <summary>Conjunctive Normal Form</summary>
+
+                <code>{{ cnf_simplified }}</code>
+                <div id="cnf_output_graph"></div>
+                <script>
+                    d3.select("#cnf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ cnf_simplified_dot | safe }}`);
+                </script>
+            </details>
+
+            <details>
+                <summary>Disjunctive Normal Form</summary>
+
+                <code>{{ dnf_simplified }}</code>
+                <div id="dnf_output_graph"></div>
+                <script>
+                    d3.select("#dnf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ dnf_simplified_dot | safe }}`);
+                </script>
+            </details>
+
+            <details>
+                <summary>Algebraic Normal Form</summary>
+
+                <code>{{ anf_simplified }}</code>
+                <div id="anf_output_graph"></div>
+                <script>
+                    d3.select("#anf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ anf_simplified_dot | safe }}`);
+                </script>
+            </details>
+
+            <details>
+                <summary>Negation Normal Form</summary>
+
+                <code>{{ nnf_simplified }}</code>
+                <div id="nnf_output_graph"></div>
+                <script>
+                    d3.select("#nnf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ nnf_simplified_dot | safe }}`);
+                </script>
+            </details>
+
         </details>
     {% endif %}
 {% endblock %}
