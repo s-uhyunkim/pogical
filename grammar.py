@@ -16,8 +16,7 @@ contradiction = one_of("⊥ F 0")
 negation = one_of("¬ ~ !") # TODO: support ′ and '
 conjunctions = one_of("∧ & · ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens) TODO: support implicit notation AB
 disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support || syntax
-implication = one_of("→ ⇒ ⊃")
-converse = one_of("← ⇐ ⊂")
+implication = one_of("→ ⇒ ⊃ ← ⇐ ⊂")
 biconditional = one_of("↔ ⇔")
 
 left_delimiter = one_of("( [ {").suppress()
@@ -42,7 +41,8 @@ def make_conjunction_node(tokens):
     left_term, right_term = tokens[0][0], tokens[0][2]
     operator = tokens[0][1] # var 'operator' is a string
 
-    if operator == one_of("↑ | ⊼"): # Comparing Literals
+    if operator == one_of("↑ | ⊼"): # Comparing Literals because NAND is in the same order as AND.
+                                    # infix_notation() orders operations by the order of a tuple array, hence this if-statement
         return Nand(left_term, right_term, evaluate=False)
     return And(left_term, right_term, evaluate=False)
 
@@ -60,11 +60,11 @@ def make_disjunction_node(tokens):
 
 def make_implication_node(tokens):
     left_term, right_term = tokens[0][0], tokens[0][2]
-    return Implies(left_term, right_term, evaluate=False)
+    operator = tokens[0][1]
 
-def make_converse_node(tokens):
-    left_term, right_term = tokens[0][0], tokens[0][2]
-    return Implies(right_term, left_term, evaluate=False)
+    if operator == one_of("← ⇐ ⊂"):
+        return Implies(right_term, left_term, evaluate=False)
+    return Implies(left_term, right_term, evaluate=False)
 
 def make_biconditional_node(tokens):
     left_term, right_term = tokens[0][0], tokens[0][2]
@@ -79,8 +79,7 @@ expression = infix_notation(variable.set_parse_action(make_variable_node) |
         (conjunctions, 2, opAssoc.RIGHT, make_conjunction_node),
         (disjunctions, 2, opAssoc.RIGHT, make_disjunction_node),
         (implication, 2, opAssoc.RIGHT, make_implication_node),
-        (converse, 2, opAssoc.RIGHT, make_converse_node),
         (biconditional, 2, opAssoc.RIGHT, make_biconditional_node),
     ],
     Suppress(left_delimiter), Suppress(right_delimiter)
-    )
+)
