@@ -15,9 +15,9 @@ contradiction = one_of("⊥ F 0")
 
 negation = one_of("¬ ~ ! - − ′ '")
 conjunctions = one_of("∧ & · × ↑ | ⊼") # Will be sorted in make_conjunction_node(tokens) TODO: support implicit notation AB and &&
-disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ↮ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support || syntax
-implication = one_of("→ ⇒ ⊃ ← ⇐ ⊂")
-biconditional = one_of("↔ ⇔")
+disjunctions = one_of("∨ ∥ + ↓ ⊽ ⊕ ⊻ ⊙") # Will be sorted in make_disjunction_node(tokens) TODO: support || syntax
+implication = one_of("→ ⇒ ⊃ ↛ ⇏ ⊅ ← ⇐ ⊂ ↚ ⇍ ⊄")
+biconditional = one_of("↔ ⇔ ↮ ⇎")
 
 left_delimiter = one_of("( [ {").suppress()
 right_delimiter = one_of(") ] }").suppress()
@@ -53,7 +53,7 @@ def make_disjunction_node(tokens):
     left_term, right_term = tokens[0][0], tokens[0][2]
     operator = tokens[0][1]
 
-    if operator == one_of("⊕ ⊻ ↮"):
+    if operator == one_of("⊕ ⊻"):
         return Xor(left_term, right_term, evaluate=False)
     elif operator == one_of("↓ ⊽"):
         return Nor(left_term, right_term, evaluate=False)
@@ -65,12 +65,20 @@ def make_implication_node(tokens):
     left_term, right_term = tokens[0][0], tokens[0][2]
     operator = tokens[0][1]
 
-    if operator == one_of("← ⇐ ⊂"):
+    if operator == one_of("↛ ⇏ ⊅"):
+        return Not(Implies(left_term, right_term, evaluate=False), evaluate=False)
+    elif operator == one_of("← ⇐ ⊂"):
         return Implies(right_term, left_term, evaluate=False)
+    elif operator == one_of("↚ ⇍ ⊄"):
+        return Not(Implies(right_term, left_term, evaluate=False), evaluate=False)
     return Implies(left_term, right_term, evaluate=False)
 
 def make_biconditional_node(tokens):
     left_term, right_term = tokens[0][0], tokens[0][2]
+    operator = tokens[0][1]
+
+    if operator == one_of("↮ ⇎"):
+        return Not(Equivalent(left_term, right_term, evaluate=False), evaluate=False)
     return Equivalent(left_term, right_term, evaluate=False)
 
 # expression definition
