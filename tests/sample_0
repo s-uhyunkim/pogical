@@ -3,6 +3,7 @@
 {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c (simplify_logic is so hellbent on POS or SOP form that the output is horribly long)
 p & q ∧ r & s
 t ↑ r | q ⊼ p
+t ← r ⇐ p
 r → q ⇒ p ⊃ o
 ~¬¬¬¬!!~p (should give p)
 !~¬¬¬¬!!~p (should give ~p)
