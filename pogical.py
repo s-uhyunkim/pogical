@@ -26,7 +26,7 @@ async def simplify(request: Request, input_string: Annotated[str, Form()]):
         return templates.TemplateResponse("output.html", {"hasException" : True}) # toggles other block definition in output.html
     boolean_expression_dot = dotprint(boolean_expression) # converts boolean_expression into a DOT string
 
-    simplified = simplify_logic(boolean_expression, deep=False) # function only takes in sympy 'Boolean' input
+    simplified = simplify_logic(boolean_expression, deep=False, force=True) # function only takes in sympy 'Boolean' input
     simplified_dot = dotprint(simplified)
     cnf_simplified = to_cnf(simplified) # to_cnf() automatically detects if an expression is already in CNF
     cnf_simplified_dot = dotprint(cnf_simplified)
