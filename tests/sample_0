@@ -9,7 +9,7 @@ r → q ⇒ p ⊃ o
 !~¬¬¬¬!!~p (should give ~p)
 p ↔ a ⇔ b
 p ∨ q ∥ r + s ↓ t ⊽ u ⊕ v ⊻ w ↮ x ⊙ y
-a & c ∨ ~[~b & (T & d ∨ ~{~b & a})] (should give the DNF expression b | (a & c) | (a & ~d). [(d -> c) & a] -> b when reducing operators)
+a & c ∨ ~[~b & (T & d ∨ ~{~b & a})] (should give the DNF expression b | (a & c) | (a & ~d). [a & (d → c)] + b for least amount of operations)
 ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (should give ⊤)
 ~p ∨ q (should give p → q)
 p & p
