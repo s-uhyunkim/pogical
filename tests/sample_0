@@ -13,3 +13,6 @@ a & c ∨ ~[~b & (T & d ∨ ~{~b & a})] (should give the DNF expression b | (a &
 ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (should give ⊤)
 ~p ∨ q (should give p → q)
 p & p
+
+~y + (x & z) (should give y → (x & z))
+(a & b & p) | (a & ~b & ~p) | (b & ~a & ~p) | (p & ~a & ~b) (should give p ↔ a ↔ b)
