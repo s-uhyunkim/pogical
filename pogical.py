@@ -3,10 +3,11 @@
 from typing import Annotated
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
-from sympy.logic.boolalg import to_anf
+from sympy.logic.boolalg import simplify_logic, to_cnf, to_dnf, to_anf, to_nnf
+from sympy.printing.dot import dotprint
 
 # Logic parsing grammar; see pyparsing tutorials or docs
-from grammar import *
+from grammar import expression
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")

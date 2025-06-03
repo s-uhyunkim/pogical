@@ -1,6 +1,6 @@
 from pyparsing import ParserElement, infix_notation, opAssoc, Suppress, one_of, Word, pyparsing_unicode as ppu
-from sympy import *
-from sympy.logic.boolalg import Xnor, Boolean
+from sympy import Symbol
+from sympy.logic.boolalg import true, false, Not, And, Nand, Or, Xor, Nor, Xnor, Implies, Equivalent
 
 ParserElement.enablePackrat() # Simplifies delimiter parsing and speeds up parsing in general
 
