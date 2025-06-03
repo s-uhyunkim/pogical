@@ -47,9 +47,11 @@ def make_prefix_negation(tokens):
     atom = tokens[0][1]
     return Not(atom, evaluate=False)
 
-def make_postfix_negation(tokens): # TODO: p'' currently parses as p'
-    atom = tokens[0][0]
-    return Not(atom, evaluate=False)
+def make_postfix_negation(tokens):
+    literal = tokens[0][0] # Start with the atom, but it'll be appended recursively
+    for _ in tokens[0][1:]:
+        literal = Not(literal, evaluate=False)
+    return literal
 
 # Dispatch parse actions like make_conjunction parse left to right *by pairs*
 # I think parsing all AND and NAND chains at once, by sorting them and then combining them,
