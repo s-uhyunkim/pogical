@@ -1,6 +1,7 @@
 #!/bin/python3
 
 from typing import Annotated
+
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from sympy.logic.boolalg import simplify_logic, to_cnf, to_dnf, to_anf, to_nnf
