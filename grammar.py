@@ -61,10 +61,7 @@ def make_conjunction(tokens):
         left_operand, operator, right_operand = chain
     else:
         left_operand = chain[0]
-        for i in range(1, len(chain), 2):
-            operator = chain[i]
-            right_operand = chain[i + 1]
-
+        for operator, right_operand in zip(chain[1::2], chain[2::2]):
             if operator == non_conjunction:
                 left_operand = Nand(left_operand, right_operand, evaluate=False)
             else:
@@ -83,10 +80,7 @@ def make_disjunction(tokens):
         left_operand, operator, right_operand = chain
     else:
         left_operand = chain[0]
-        for i in range(1, len(chain), 2):
-            operator = chain[i]
-            right_operand = chain[i + 1]
-
+        for operator, right_operand in zip(chain[1::2], chain[2::2]):
             if operator == exclusive_disjunction:
                 left_operand = Xor(left_operand, right_operand, evaluate=False)
             elif operator == non_disjunction:
@@ -113,10 +107,7 @@ def make_implication(tokens):
         left_operand, operator, right_operand = chain
     else:
         left_operand = chain[0]
-        for i in range(1, len(chain), 2):
-            operator = chain[i]
-            right_operand = chain[i + 1]
-
+        for operator, right_operand in zip(chain[1::2], chain[2::2]):
             if operator == converse:
                 left_operand = Implies(right_operand, left_operand, evaluate=False)
             elif operator == non_implication:
@@ -143,10 +134,7 @@ def make_biconditional(tokens):
         left_operand, operator, right_operand = chain
     else:
         left_operand = chain[0]
-        for i in range(1, len(chain), 2):
-            operator = chain[i]
-            right_operand = chain[i + 1]
-
+        for operator, right_operand in zip(chain[1::2], chain[2::2]):
             if operator == non_conjunction:
                 left_operand = Not(Equivalent(left_operand, right_operand, evaluate=False))
             else:
