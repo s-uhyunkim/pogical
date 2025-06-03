@@ -1,8 +1,10 @@
 #!/bin/python3
 
 from typing import Annotated
+
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
+from sympy import pretty
 from sympy.logic.boolalg import simplify_logic, to_cnf, to_dnf, to_anf, to_nnf
 from sympy.printing.dot import dotprint
 
@@ -43,14 +45,14 @@ async def simplify(request: Request, input_string: Annotated[str, Form()]):
                                                      "boolean_expression": boolean_expression,
                                                      "boolean_expression_dot": boolean_expression_dot,
 
-                                                     "simplified": simplified,
+                                                     "simplified": pretty(simplified),
                                                      "simplified_dot": simplified_dot,
-                                                     "cnf_simplified": cnf_simplified,
+                                                     "cnf_simplified": pretty(cnf_simplified),
                                                      "cnf_simplified_dot": cnf_simplified_dot,
-                                                     "dnf_simplified": dnf_simplified,
+                                                     "dnf_simplified": pretty(dnf_simplified),
                                                      "dnf_simplified_dot": dnf_simplified_dot,
-                                                     "anf_simplified": anf_simplified,
+                                                     "anf_simplified": pretty(anf_simplified),
                                                      "anf_simplified_dot": anf_simplified_dot,
-                                                     "nnf_simplified": nnf_simplified,
+                                                     "nnf_simplified": pretty(nnf_simplified),
                                                      "nnf_simplified_dot": nnf_simplified_dot
                                                      })
