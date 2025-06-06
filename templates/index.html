@@ -14,6 +14,8 @@
         <form method="post">
             <input type="text" name="input_string" placeholder="Enter logical expressions" required>
             <input type="submit" value="Simplify" id="simply">
+            <input type="checkbox" name="implicit_conjunctions" id="implicit_conjunctions">
+            <label for="implicit_conjunctions">Implicit Conjunctions</label>
         </form>
         <br>
     {% block output %}

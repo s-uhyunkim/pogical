@@ -1,14 +1,12 @@
-#!/bin/python3
-
 from typing import Annotated
-
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
+from sympy import pretty
 from sympy.logic.boolalg import simplify_logic, to_cnf, to_dnf, to_anf, to_nnf
 from sympy.printing.dot import dotprint
 
 # Logic parsing grammar; see pyparsing tutorials or docs
-from grammar import expression
+from grammar import expression, preprocess
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -20,10 +18,15 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/")
-# Recommended to use Annotated according to the current FastAPI docs
-async def simplify(request: Request, input_string: Annotated[str, Form()]):
-    try:
-        boolean_expression = expression.parse_string(input_string)[0] # W/o [0], the var would be ParseResult object
+# Recommended to use Annotated according to the FastAPI docs
+# Since the checkbox is in the <form> tag, implicit_conjunctions is processed like input_string, but instead None is a valid value
+async def simplify(request: Request, input_string: Annotated[str, Form()], implicit_conjunctions: Annotated[str, Form()] = None):
+    try: # without [0], boolean_expression would be ParseResult object
+        print(implicit_conjunctions)
+        if implicit_conjunctions is not None:
+            boolean_expression = expression.parse_string(preprocess(input_string))[0]
+        else:
+            boolean_expression = expression.parse_string(input_string)[0]
     except:
         return templates.TemplateResponse("output.html", {"hasException" : True}) # toggles other block definition in output.html
     boolean_expression_dot = dotprint(boolean_expression) # converts boolean_expression into a DOT string
@@ -41,17 +44,17 @@ async def simplify(request: Request, input_string: Annotated[str, Form()]):
 
     return templates.TemplateResponse("output.html", {"request": request,
                                                      "input_string": input_string,
-                                                     "boolean_expression": boolean_expression,
+                                                     "boolean_expression": pretty(boolean_expression),
                                                      "boolean_expression_dot": boolean_expression_dot,
 
-                                                     "simplified": simplified,
+                                                     "simplified": pretty(simplified),
                                                      "simplified_dot": simplified_dot,
-                                                     "cnf_simplified": cnf_simplified,
+                                                     "cnf_simplified": pretty(cnf_simplified),
                                                      "cnf_simplified_dot": cnf_simplified_dot,
-                                                     "dnf_simplified": dnf_simplified,
+                                                     "dnf_simplified": pretty(dnf_simplified),
                                                      "dnf_simplified_dot": dnf_simplified_dot,
-                                                     "anf_simplified": anf_simplified,
+                                                     "anf_simplified": pretty(anf_simplified),
                                                      "anf_simplified_dot": anf_simplified_dot,
-                                                     "nnf_simplified": nnf_simplified,
+                                                     "nnf_simplified": pretty(nnf_simplified),
                                                      "nnf_simplified_dot": nnf_simplified_dot
                                                      })
