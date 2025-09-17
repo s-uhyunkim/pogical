@@ -1,102 +1,98 @@
 {% extends "index.html" %}
 
 {% block output %}
-    {% if hasException %}
-        <p>PyParsing could not parse input string into a SymPy expression. :(</p>
-    {% else %}
-        <details open>
+    <details open>
 
-            <summary>Input</summary>
-            <code>{{ input_string }}<br>{{ boolean_expression }}</code>
+        <summary>Input</summary>
+        <code>{{ input_string }}<br>{{ boolean_expression }}</code>
+        <details>
+            <summary>SymPy Directed Acyclic Graph</summary>
+            <div id="input_graph"></div>
+            <script>
+                d3.select("#input_graph")
+                  .graphviz()
+                  .renderDot(`{{ boolean_expression_dot | safe }}`);
+                    // Must use backticks `` to avoid synatx errors during injection through Jinja2!
+                    // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
+                    // TODO: switch to reading the graphviz file!
+            </script>
+        </details>
+
+    </details>
+
+    <details open>
+
+        <summary>Simplification</summary>
+        <details open>
+            <summary>Minimal Operators Form</summary>
+            <!-- Idk if there's a standard name for a form with least amount of operators -->
+            <code>{{ simplified }}</code>
             <details>
                 <summary>SymPy Directed Acyclic Graph</summary>
-                <div id="input_graph"></div>
+                <div id="output_graph"></div>
                 <script>
-                    d3.select("#input_graph")
+                    d3.select("#output_graph")
                       .graphviz()
-                      .renderDot(`{{ boolean_expression_dot | safe }}`);
-                        // Must use backticks `` to avoid synatx errors during injection through Jinja2!
-                        // If '' or "" are used instead, JavaScript will break up the string when it shouldn't
-                        // TODO: switch to reading the graphviz file!
+                      .renderDot(`{{ simplified_dot | safe }}`);
                 </script>
             </details>
-
         </details>
 
-        <details open>
-
-            <summary>Simplification</summary>
-            <details open>
-                <summary>Minimum Operators Form</summary>
-                <!-- Idk if there's a standard name for a form with least amount of operators -->
-                <code>{{ simplified }}</code>
-                <details>
-                    <summary>SymPy Directed Acyclic Graph</summary>
-                    <div id="output_graph"></div>
-                    <script>
-                        d3.select("#output_graph")
-                          .graphviz()
-                          .renderDot(`{{ simplified_dot | safe }}`);
-                    </script>
-                </details>
-            </details>
-
+        <details>
+            <summary>Conjunctive Normal Form</summary>
+            <code>{{ cnf_simplified }}</code>
             <details>
-                <summary>Conjunctive Normal Form</summary>
-                <code>{{ cnf_simplified }}</code>
-                <details>
-                    <summary>SymPy Directed Acyclic Graph</summary>
-                    <div id="cnf_output_graph"></div>
-                    <script>
-                        d3.select("#cnf_output_graph")
-                          .graphviz()
-                          .renderDot(`{{ cnf_simplified_dot | safe }}`);
-                    </script>
-                </details>
+                <summary>SymPy Directed Acyclic Graph</summary>
+                <div id="cnf_output_graph"></div>
+                <script>
+                    d3.select("#cnf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ cnf_simplified_dot | safe }}`);
+                </script>
             </details>
-
-            <details>
-                <summary>Disjunctive Normal Form</summary>
-                <code>{{ dnf_simplified }}</code>
-                <details>
-                    <summary>SymPy Directed Acyclic Graph</summary>
-                    <div id="dnf_output_graph"></div>
-                    <script>
-                        d3.select("#dnf_output_graph")
-                          .graphviz()
-                          .renderDot(`{{ dnf_simplified_dot | safe }}`);
-                    </script>
-                </details>
-            </details>
-
-            <details>
-                <summary>Algebraic Normal Form</summary>
-                <code>{{ anf_simplified }}</code>
-                <details>
-                    <summary>SymPy Directed Acyclic Graph</summary>
-                    <div id="anf_output_graph"></div>
-                    <script>
-                        d3.select("#anf_output_graph")
-                          .graphviz()
-                          .renderDot(`{{ anf_simplified_dot | safe }}`);
-                    </script>
-                </details>
-            </details>
-
-            <details>
-                <summary>Negation Normal Form</summary>
-                <code>{{ nnf_simplified }}</code>
-                <details>
-                    <summary>SymPy Directed Acyclic Graph</summary>
-                    <div id="nnf_output_graph"></div>
-                    <script>
-                        d3.select("#nnf_output_graph")
-                          .graphviz()
-                          .renderDot(`{{ nnf_simplified_dot | safe }}`);
-                    </script>
-                </details>
-            </details>
-
         </details>
-    {% endif %}
+
+        <details>
+            <summary>Disjunctive Normal Form</summary>
+            <code>{{ dnf_simplified }}</code>
+            <details>
+                <summary>SymPy Directed Acyclic Graph</summary>
+                <div id="dnf_output_graph"></div>
+                <script>
+                    d3.select("#dnf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ dnf_simplified_dot | safe }}`);
+                </script>
+            </details>
+        </details>
+
+        <details>
+            <summary>Algebraic Normal Form</summary>
+            <code>{{ anf_simplified }}</code>
+            <details>
+                <summary>SymPy Directed Acyclic Graph</summary>
+                <div id="anf_output_graph"></div>
+                <script>
+                    d3.select("#anf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ anf_simplified_dot | safe }}`);
+                </script>
+            </details>
+        </details>
+
+        <details>
+            <summary>Negation Normal Form</summary>
+            <code>{{ nnf_simplified }}</code>
+            <details>
+                <summary>SymPy Directed Acyclic Graph</summary>
+                <div id="nnf_output_graph"></div>
+                <script>
+                    d3.select("#nnf_output_graph")
+                      .graphviz()
+                      .renderDot(`{{ nnf_simplified_dot | safe }}`);
+                </script>
+            </details>
+        </details>
+
+    </details>
 {% endblock %}
