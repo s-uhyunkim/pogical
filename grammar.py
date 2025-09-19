@@ -8,7 +8,7 @@ from pyparsing.unicode import pyparsing_unicode
 from sympy import Symbol
 from sympy.logic.boolalg import true, false, Not, And, Nand, Or, Xor, Nor, Xnor, Implies, Equivalent
 
-ParserElement.enable_packrat()  # since there's 6 levels of precedence in infix_notation()
+ParserElement.enable_packrat()  # since there are 6 levels of precedence in infix_notation()
 
 
 PREFIX_NEGATION_LITERALS = "~ ! - ¬ −"
@@ -23,8 +23,8 @@ ESCAPED_LOOKAHEADS = re.escape(NON_ALNUM_LOOKAHEADS)
 
 IMPLICIT_CONJUNCTION = re.compile(rf"(?<=[a-zA-Z{ESCAPED_LOOKBEHINDS}])(?=[a-zA-Z{ESCAPED_LOOKAHEADS}])")
 
-def make_conjunctions_explicit(input_string):  # since parsing all implicit conjunctions directly is inefficient
-    """Make every implicit conjunction explicit and return a new string."""
+def reveal_conjunctions(input_string):  # since parsing all implicit conjunctions directly is inefficient
+    """Reveal every implicit conjunction and return a new string."""
     return IMPLICIT_CONJUNCTION.sub('.', input_string)
 
 
@@ -44,19 +44,17 @@ PREFIX_NEGATION = one_of(PREFIX_NEGATION_LITERALS)
 POSTFIX_NEGATION = one_of(POSTFIX_NEGATION_LITERALS)
 CONJUNCTION = one_of(". & * ∧ · ×")
 NON_CONJUNCTION = one_of("| ↑ ⊼")
-DISJUNCTION = one_of("+ ∨ ∥")
 EXCLUSIVE_DISJUNCTION = one_of("^ ⊕ ⊻")
-NON_DISJUNCTION = one_of("↓ ⊽")
 EXCLUSIVE_NON_DISJUNCTION = one_of("⊙")
+DISJUNCTION = one_of("+ ∨ ∥")
+NON_DISJUNCTION = one_of("↓ ⊽")
 IMPLICATION = one_of("> → ⇒ ⊃")
-CONVERSE = one_of("< ← ⇐ ⊂")
 NON_IMPLICATION = one_of("↛ ⇏ ⊅")
+CONVERSE = one_of("< ← ⇐ ⊂")
 NON_CONVERSE = one_of("↚ ⇍ ⊄")
 BICONDITIONAL = one_of("↔ ⇔")
 NON_BICONDITIONAL = one_of("↮ ⇎")
 
-
-# Setting evaluate=False to display original parsed input to user
 
 def make_variable(tokens):
     """Parse a token as a ``Symbol`` object and return it."""
@@ -76,7 +74,7 @@ def make_contradiction():
 def make_prefix_negation(tokens):
     """Parse a token as ``Not`` with parsed arguments and return it."""
     literal = tokens[0][1]
-    return Not(literal, evaluate=False)
+    return Not(literal, evaluate=False) # `evaluate=False` keeps the original parsed input
 
 
 def make_postfix_negation(tokens):
@@ -87,10 +85,9 @@ def make_postfix_negation(tokens):
     return literal
 
 
-# Having the below dispatch functions parse pair-wise is much more efficient
-# and readable than parsing a chain of args
 def make_conjunction(tokens):
     """Parse three tokens as ``And`` or ``Nand`` with parsed arguments and return it."""
+    # Parsing pair-wise is much more efficient and readable than parsing a chain of args
     chain = tokens[0]
     left_operand = chain[0]
     for operator, right_operand in zip(chain[1::2], chain[2::2]):  # Must iterate because tokens is a flat list
@@ -101,24 +98,32 @@ def make_conjunction(tokens):
     return left_operand
 
 
-def make_disjunction(tokens):
-    """Parse three tokens as ``Or``, ``Xor``, ``Nor``, or ``Xnor`` with parsed arguments and return it."""
+def make_exclusive_disjunction(tokens):
+    """Parse three tokens as ``Xor`` or ``Xnor`` with parsed arguments and return it."""
     chain = tokens[0]
     left_operand = chain[0]
     for operator, right_operand in zip(chain[1::2], chain[2::2]):
-        if operator == EXCLUSIVE_DISJUNCTION:
-            left_operand = Xor(left_operand, right_operand, evaluate=False)
-        elif operator == NON_DISJUNCTION:
-            left_operand = Nor(left_operand, right_operand, evaluate=False)
-        elif operator == EXCLUSIVE_NON_DISJUNCTION:
+        if operator == EXCLUSIVE_NON_DISJUNCTION:
             left_operand = Xnor(left_operand, right_operand, evaluate=False)
+        else:
+            left_operand = Xor(left_operand, right_operand, evaluate=False)
+    return left_operand
+
+
+def make_inclusive_disjunction(tokens):
+    """Parse three tokens as ``Or`` or ``Nor`` with parsed arguments and return it."""
+    chain = tokens[0]
+    left_operand = chain[0]
+    for operator, right_operand in zip(chain[1::2], chain[2::2]):
+        if operator == NON_DISJUNCTION:
+            left_operand = Nor(left_operand, right_operand, evaluate=False)
         else:
             left_operand = Or(left_operand, right_operand, evaluate=False)
     return left_operand
 
 
 def make_implication(tokens):
-    """Parse three tokens as ``Implies``, converse, non-implication, or non-converse with parsed arguments and return it."""
+    """Parse three tokens as ``Implies``, non-implication, converse, or non-converse with parsed arguments and return it."""
     chain = tokens[0]
     left_operand = chain[0]
     for operator, right_operand in zip(chain[1::2], chain[2::2]):
@@ -149,12 +154,13 @@ def make_biconditional(tokens):
 expression = infix_notation(VARIABLE.set_parse_action(make_variable) |
                             TAUTOLOGY.set_parse_action(make_tautology) |
                             CONTRADICTION.set_parse_action(make_contradiction),
-                            [  # First two are ordered so due to left-to-right precedence
+                            [  # The first two are ordered so due to left-to-right precedence
                                 (PREFIX_NEGATION, 1, opAssoc.RIGHT, make_prefix_negation),
                                 (POSTFIX_NEGATION, 1, opAssoc.LEFT, make_postfix_negation),
                                 (CONJUNCTION | NON_CONJUNCTION, 2, opAssoc.LEFT, make_conjunction),
-                                (DISJUNCTION | EXCLUSIVE_DISJUNCTION | NON_DISJUNCTION | EXCLUSIVE_NON_DISJUNCTION, 2, opAssoc.LEFT, make_disjunction),
-                                (IMPLICATION | CONVERSE | NON_IMPLICATION | NON_CONVERSE, 2, opAssoc.LEFT, make_implication),
+                                (EXCLUSIVE_DISJUNCTION | EXCLUSIVE_NON_DISJUNCTION, 2, opAssoc.LEFT, make_exclusive_disjunction),
+                                (DISJUNCTION | NON_DISJUNCTION, 2, opAssoc.LEFT, make_inclusive_disjunction),
+                                (IMPLICATION | NON_IMPLICATION | CONVERSE | NON_CONVERSE, 2, opAssoc.LEFT, make_implication),
                                 (BICONDITIONAL | NON_BICONDITIONAL, 2, opAssoc.LEFT, make_biconditional),
                             ],
                             Suppress(LEFT_DELIMITER), Suppress(RIGHT_DELIMITER)
