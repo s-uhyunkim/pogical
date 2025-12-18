@@ -3,6 +3,7 @@
 """
 
 import re
+
 from pyparsing import ParserElement, infix_notation, opAssoc, Suppress, one_of, Word
 from pyparsing.unicode import pyparsing_unicode
 from sympy import Symbol

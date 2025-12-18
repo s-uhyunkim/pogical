@@ -1,18 +1,20 @@
 {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c → (t ↔ u) & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (evaluates to T)
-~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (evaluates to )
+~p ∧ q ∨ r ⊕ s ↓ a ⊙ ~b → c → t ↔ u & ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (evaluates to (t ∨ ~c) ∧ (a ∨ t ∨ ~b) ∧ (b ∨ t ∨ ~a) ∧ (p ∨ t ∨ ~q) ∧ (r ∨ t ∨ ~s) ∧ (s ∨ t ∨ ~r))
 {~p} ∧ q ∨ r ⊕ s ↓ [a ⊙ ~b] → c (simplify_logic is so hellbent on POS or SOP form that the output is horribly long)
 p & q ∧ r & s
 t ↑ r | q ⊼ p
 t ← r ⇐ p
 r → q ⇒ p ⊃ o
-~¬¬¬¬!!~p (evaluates to p)
-!~¬¬¬¬!!~p (evaluates to ~p)
+~~~~~!!~p (evaluates to p)
+!~~~~~!!~p (evaluates to ~p)
 p ↔ a ⇔ b
 p ∨ q ∥ r + s ↓ t ⊽ u ⊕ v ⊻ w ↮ x ⊙ y
-a & c ∨ ~[~b & (T & d ∨ ~{~b & a})] (evaluates to b | (a & c) | (a & ~d). [a & (d → c)] + b for least amount of operations)
+a & c ∨ ~[~b & (T & d ∨ ~{~b & a})] (evaluates to b | (a & c) | (a & ~d). [a & (d → c)] + b for multi-level simplification)
 ⊤ ↑ ⊥ | ⊥ ⊼ ⊥ (evaluates to ⊤)
 ~p ∨ q (evaluates to p → q)
 p & p
 
 ~y + (x & z) (evaluates to y → (x & z))
 (a & b & p) | (a & ~b & ~p) | (b & ~a & ~p) | (p & ~a & ~b) (evaluates to p ↔ a ↔ b)
+
+(~x_1 + x_2 + x_3) & (x_10 + ~x_11) & (~x_20 + x_21 + x_22 + x_23) + (x_30 & ~x_31 & x_32 & ~x_33 & x_34)

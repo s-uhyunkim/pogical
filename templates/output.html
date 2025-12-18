@@ -24,8 +24,7 @@
 
         <summary>Simplification</summary>
         <details open>
-            <summary>Minimal Operators Form</summary>
-            <!-- I don't know if there's a standard name for a form with the least number of operators -->
+            <summary>Multilevel Logic</summary>
             <code>{{ simplified }}</code>
             <details>
                 <summary>SymPy Directed Acyclic Graph</summary>
@@ -34,6 +33,7 @@
                     d3.select("#output_graph")
                       .graphviz()
                       .renderDot(`{{ simplified_dot | safe }}`);
+                    // TODO: stop using safe!
                 </script>
             </details>
         </details>

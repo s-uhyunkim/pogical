@@ -2,12 +2,12 @@
     TEMP
 """
 from typing import Annotated, Optional
+
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from sympy import pretty
 from sympy.logic.boolalg import simplify_logic, to_cnf, to_dnf, to_anf, to_nnf
 from sympy.printing.dot import dotprint
-# from pyeda.boolalg import espresso
 
 from grammar import expression, reveal_conjunctions
 
@@ -20,13 +20,13 @@ async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/")
-async def simplify(request: Request, input_string: Annotated[str, Form()], implicit_conjunctions: Optional[bool] = Form(None)):
+def simplify(request: Request, input_string: Annotated[str, Form()], implicit_conjunctions: Optional[bool] = Form(None)):
     """Return a ``Coroutine`` of the ``output.html`` template and the ``request``, ``input_string``,
     and ``implicit_conjunctions`` values."""
     # FastAPI recommends `Annotated`
     # If the HTML checkbox is unchecked, then `implicit_conjunctions` is unassigned. Thus, `None` is its default value
 
-    if implicit_conjunctions is None:
+    if implicit_conjunctions:
         boolean_expression = expression.parse_string(input_string)[0]
         # Without [0], `boolean_expression` would be a ParseResult object
     else:
