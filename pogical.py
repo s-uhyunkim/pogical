@@ -33,7 +33,7 @@ def simplify(request: Request, input_string: Annotated[str, Form()], implicit_co
         boolean_expression = expression.parse_string(reveal_conjunctions(input_string))[0]
     boolean_expression_dot = dotprint(boolean_expression)
 
-    simplified = simplify_logic(boolean_expression, deep=False, force=True)
+    simplified = simplify_logic(boolean_expression, deep=False)
     simplified_dot = dotprint(simplified)
     cnf_simplified = to_cnf(simplified)  # `to_cnf()` automatically detects if an expression is already in CNF
     cnf_simplified_dot = dotprint(cnf_simplified)
